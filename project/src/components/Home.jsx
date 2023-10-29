@@ -26,11 +26,16 @@ const Home = () => {
     e.dataTransfer.setData('data', llist)
     console.log(llist);
   }
-  const ondragend = async (e, index) => {
+  const ondragend = async (e,arrindex, index) => {
     e.preventDefault()
-    // const updatelist = lists
-    // await updatelist[index].listitem[index]
-    // console.log(updatelist);
+    const updatelist = lists
+    await updatelist[arrindex].listitem.splice(index,1)
+    setLists(updatelist)
+    if (loading) {
+      setLoading(false)
+    }
+    else { setLoading(true) }
+    console.log(arrindex);
   }
 
   const ondragover = (e) => {
@@ -50,9 +55,7 @@ const Home = () => {
         setLoading(false)
       }
       else { setLoading(true) }
-      console.log(lists[index].listitem);
-      console.log(lists);
-      console.log(loading);
+      console.log(list.id);
       const response = await fetch('http://localhost:5000/updatelist', {
         method: 'POST',
         headers: {
@@ -77,12 +80,12 @@ const Home = () => {
   return (
     <>
       <div className='disp'>
-        {lists && lists.map((list, index) => (
-          <div key={index} className='disp2' onDragOver={ondragover} onDrop={(e) => droped(e, list, index, list.id)}>
-            <h4> List{list.id} </h4>
+        {lists && lists.map((list, arrindex) => (
+          <div key={arrindex} className='disp2' onDragOver={ondragover} onDrop={(e) => droped(e, list, arrindex, list.id)}>
+            <h4> List {list.id} </h4>
             {list.listitem && list.listitem.map((llist, index) => (
               <div key={index} >
-                <div draggable className='disp3' onDragStart={(e) => ondragstart(e, llist)} onDragEnd={(e) => ondragend(e, index)} ><br />
+                <div draggable className='disp3' onDragStart={(e) => ondragstart(e, llist)} onDragEnd={(e) => ondragend(e,arrindex, index)} ><br />
                   <input type='checkbox'></input><span >{llist}</span><br />
                 </div>
                 <hr />

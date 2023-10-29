@@ -56,7 +56,7 @@ app.post('/updatelist', async (req, res) => {
   const user = await Lschema.findOne({ where: { id: listid } })
   try {
     let userdata = user.listitem
-    if (datas in userdata) {
+    if(datas in userdata) {
       return
     }
     else {
