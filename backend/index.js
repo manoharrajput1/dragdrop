@@ -50,13 +50,13 @@ app.post('/createlist', async (req, res) => {
   const user = await Lschema.create({ listitem: [listitem] })
 });
 app.post('/updatelist', async (req, res) => {
-  const { datas, listid } = req.body
-  console.log(datas, listid);
+  const { datas, listid, index } = req.body
+  // console.log(datas, listid);
   await sequelize.sync()
   const user = await Lschema.findOne({ where: { id: listid } })
   try {
     let userdata = user.listitem
-    if(datas in userdata) {
+    if (datas in userdata) {
       return
     }
     else {
@@ -64,6 +64,19 @@ app.post('/updatelist', async (req, res) => {
     }
     const updatedlist = Lschema.update({ listitem: userdata }, { where: { id: listid } })
 
+  } catch (error) {
+    console.log(error);
+  }
+});
+app.post('/deletelist', async (req, res) => {
+  const { listid, index } = req.body
+  console.log(listid,index);
+  await sequelize.sync()
+  const user = await Lschema.findOne({ where: { id: listid } })
+  try {
+    let userdata = user.listitem
+    userdata.splice(index, 1)
+    const updatedlist = Lschema.update({ listitem: userdata }, { where: { id: listid } })
   } catch (error) {
     console.log(error);
   }
